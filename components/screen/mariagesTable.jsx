@@ -1,6 +1,6 @@
 "use client";
 import { Trash2 } from "lucide-react";
-
+import { Plus } from "lucide-react";
 import * as React from "react";
 import {
     Table,
@@ -51,7 +51,13 @@ export default function MariageTable({ data, onAdd, onDelete }) {
 
                 <Dialog>
                     <DialogTrigger asChild>
-                        <Button>Add Mariage</Button>
+                        <Button
+                            variant="default"
+                            size="icon"
+                            aria-label="Add Naissance"
+                        >
+                            <Plus className="h-5 w-5" />
+                        </Button>
                     </DialogTrigger>
                     <DialogContent>
                         <DialogHeader>

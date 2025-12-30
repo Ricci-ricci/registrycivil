@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { Trash2 } from "lucide-react";
+import { Plus } from "lucide-react";
 
 import {
     Table,
@@ -54,7 +55,13 @@ export default function NaissanceTable({ data, onAdd, onDelete }) {
 
                 <Dialog>
                     <DialogTrigger asChild>
-                        <Button>Ajouter une naissance</Button>
+                        <Button
+                            variant="default"
+                            size="icon"
+                            aria-label="Add Naissance"
+                        >
+                            <Plus className="h-5 w-5" />
+                        </Button>
                     </DialogTrigger>
 
                     <DialogContent>
