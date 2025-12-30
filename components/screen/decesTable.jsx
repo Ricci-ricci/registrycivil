@@ -1,8 +1,8 @@
 "use client";
-import { Trash2 } from "lucide-react";
-import { Plus } from "lucide-react";
 
 import * as React from "react";
+import { Trash2, Plus } from "lucide-react";
+
 import {
     Table,
     TableBody,
@@ -23,97 +23,142 @@ import {
 
 export default function DecesTable({ data, onAdd, onDelete }) {
     const [search, setSearch] = React.useState("");
-    const [filteredData, setFilteredData] = React.useState(data);
 
-    React.useEffect(() => {
-        setFilteredData(
-            data.filter(
-                (item) =>
-                    item.nom_defunt
-                        .toLowerCase()
-                        .includes(search.toLowerCase()) ||
-                    item.prenom_defunt
-                        .toLowerCase()
-                        .includes(search.toLowerCase()) ||
-                    item.village.toLowerCase().includes(search.toLowerCase()) ||
-                    item.cause.toLowerCase().includes(search.toLowerCase()),
-            ),
+    const filteredData = React.useMemo(() => {
+        return data.filter((item) =>
+            [
+                item.nom_defunt,
+                item.prenom_defunt,
+                item.village,
+                item.cause_deces,
+            ]
+                .join(" ")
+                .toLowerCase()
+                .includes(search.toLowerCase()),
         );
     }, [search, data]);
 
     return (
-        <div className="p-4 overflow-hidden">
-            {/* Header */}
-            <div className="flex items-center justify-between mb-4">
+        <div className="p-4 space-y-4 overflow-hidden">
+            {/* Top actions */}
+            <div className="flex justify-between items-center">
                 <Input
-                    placeholder="Search décès..."
+                    placeholder="Rechercher (nom, village, cause...)"
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
-                    className="max-w-xs"
+                    className="max-w-sm"
                 />
 
                 <Dialog>
                     <DialogTrigger asChild>
-                        <Button
-                            variant="default"
-                            size="icon"
-                            aria-label="Add Naissance"
-                        >
+                        <Button size="icon">
                             <Plus className="h-5 w-5" />
                         </Button>
                     </DialogTrigger>
-                    <DialogContent>
+
+                    <DialogContent className="max-h-[90vh] overflow-y-auto">
                         <DialogHeader>
-                            <DialogTitle>Add New Décès</DialogTitle>
+                            <DialogTitle>Nouveau décès</DialogTitle>
                         </DialogHeader>
 
-                        {/* Form */}
                         <form
-                            className="space-y-2"
+                            className="grid grid-cols-2 gap-2"
                             onSubmit={(e) => {
                                 e.preventDefault();
-                                const formData = new FormData(e.currentTarget);
+                                const f = new FormData(e.currentTarget);
 
                                 onAdd({
                                     id: Date.now(),
-                                    annee: Number(formData.get("annee")),
-                                    village: formData.get("village"),
-                                    nom: formData.get("nom"),
-                                    prenom: formData.get("prenom"),
-                                    sexe: formData.get("sexe"),
-                                    date_deces: formData.get("date_deces"),
-                                    cause: formData.get("cause"),
+                                    annee: Number(f.get("annee")),
+                                    code_fokontany: f.get("code_fokontany"),
+                                    village: f.get("village"),
+
+                                    nom_defunt: f.get("nom_defunt"),
+                                    prenom_defunt: f.get("prenom_defunt"),
+                                    sexe: f.get("sexe"),
+
+                                    date_naissance: f.get("date_naissance"),
+                                    date_deces: f.get("date_deces"),
+
+                                    cause_deces: f.get("cause_deces"),
+                                    lieu_deces: f.get("lieu_deces"),
+                                    milieu: f.get("milieu"),
+                                    declare: f.get("declare"),
+                                    date_declaration: f.get("date_declaration"),
                                 });
 
                                 e.currentTarget.reset();
                             }}
                         >
+                            {/* Général */}
                             <Input name="annee" placeholder="Année" required />
+                            <Input
+                                name="code_fokontany"
+                                placeholder="Code fokontany"
+                                required
+                            />
                             <Input
                                 name="village"
                                 placeholder="Village"
                                 required
                             />
-                            <Input name="nom" placeholder="Nom" required />
+
+                            {/* Identité */}
                             <Input
-                                name="prenom"
-                                placeholder="Prénom"
+                                name="nom_defunt"
+                                placeholder="Nom du défunt"
                                 required
                             />
                             <Input
-                                name="sexe"
-                                placeholder="Sexe (M/F)"
-                                required
-                            />
-                            <Input name="date_deces" type="date" required />
-                            <Input
-                                name="cause"
-                                placeholder="Cause du décès"
+                                name="prenom_defunt"
+                                placeholder="Prénom du défunt"
                                 required
                             />
 
-                            <Button type="submit" className="w-full">
-                                Add
+                            <select
+                                name="sexe"
+                                className="border rounded px-2 py-1"
+                                required
+                            >
+                                <option value="">Sexe</option>
+                                <option value="M">Masculin</option>
+                                <option value="F">Féminin</option>
+                            </select>
+
+                            <Input type="date" name="date_naissance" />
+                            <Input type="date" name="date_deces" required />
+
+                            <Input
+                                name="cause_deces"
+                                placeholder="Cause du décès"
+                            />
+                            <Input
+                                name="lieu_deces"
+                                placeholder="Lieu du décès"
+                            />
+
+                            <select
+                                name="milieu"
+                                className="border rounded px-2 py-1"
+                            >
+                                <option value="">Milieu</option>
+                                <option value="Urbain">Urbain</option>
+                                <option value="Rural">Rural</option>
+                            </select>
+
+                            <select
+                                name="declare"
+                                className="border rounded px-2 py-1"
+                            >
+                                <option value="">Déclaré ?</option>
+                                <option value="Oui">Oui</option>
+                                <option value="Non">Non</option>
+                            </select>
+
+                            <Input type="date" name="date_declaration" />
+
+                            <Button type="submit" className="col-span-2">
+                                Ajouter
                             </Button>
                         </form>
                     </DialogContent>
@@ -125,19 +170,19 @@ export default function DecesTable({ data, onAdd, onDelete }) {
                 <TableHeader>
                     <TableRow>
                         <TableHead>Année</TableHead>
-                        <TableHead>Code fokotany</TableHead>
+                        <TableHead>Code</TableHead>
                         <TableHead>Village</TableHead>
                         <TableHead>Nom</TableHead>
                         <TableHead>Prénom</TableHead>
                         <TableHead>Sexe</TableHead>
-                        <TableHead>date de naissance</TableHead>
-                        <TableHead>Date Décès</TableHead>
-                        <TableHead>lieu deces</TableHead>
+                        <TableHead>Date naissance</TableHead>
+                        <TableHead>Date décès</TableHead>
+                        <TableHead>Lieu</TableHead>
                         <TableHead>Cause</TableHead>
                         <TableHead>Milieu</TableHead>
-                        <TableHead>Declare</TableHead>
-                        <TableHead>Date de declaration</TableHead>
-                        <TableHead>Action</TableHead>
+                        <TableHead>Déclaré</TableHead>
+                        <TableHead>Date déclaration</TableHead>
+                        <TableHead className="text-center">Action</TableHead>
                     </TableRow>
                 </TableHeader>
 
@@ -152,19 +197,18 @@ export default function DecesTable({ data, onAdd, onDelete }) {
                             <TableCell>{row.sexe}</TableCell>
                             <TableCell>{row.date_naissance}</TableCell>
                             <TableCell>{row.date_deces}</TableCell>
-                            <TableCell>{row.cause_deces}</TableCell>
                             <TableCell>{row.lieu_deces}</TableCell>
+                            <TableCell>{row.cause_deces}</TableCell>
                             <TableCell>{row.milieu}</TableCell>
                             <TableCell>{row.declare}</TableCell>
                             <TableCell>{row.date_declaration}</TableCell>
-                            <TableCell>
+                            <TableCell className="text-center">
                                 <Button
                                     variant="ghost"
                                     size="icon"
                                     onClick={() => onDelete(row.id)}
-                                    aria-label="Delete"
                                 >
-                                    <Trash2 className="h-4 w-4 text-red-500 cursor-pointer" />
+                                    <Trash2 className="h-4 w-4 text-red-500" />
                                 </Button>
                             </TableCell>
                         </TableRow>
@@ -173,10 +217,10 @@ export default function DecesTable({ data, onAdd, onDelete }) {
                     {filteredData.length === 0 && (
                         <TableRow>
                             <TableCell
-                                colSpan={8}
+                                colSpan={14}
                                 className="text-center text-muted-foreground"
                             >
-                                No décès found
+                                Aucun décès trouvé
                             </TableCell>
                         </TableRow>
                     )}

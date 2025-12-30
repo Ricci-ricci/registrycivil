@@ -70,7 +70,7 @@ export default function NaissanceTable({ data, onAdd, onDelete }) {
                         </DialogHeader>
 
                         <form
-                            className="space-y-2"
+                            className="space-y-6"
                             onSubmit={(e) => {
                                 e.preventDefault();
                                 const f = new FormData(e.currentTarget);
@@ -82,70 +82,142 @@ export default function NaissanceTable({ data, onAdd, onDelete }) {
                                         f.get("code_fokontany"),
                                     ),
                                     village: f.get("village"),
+
                                     nom_enfant: f.get("nom_enfant"),
                                     prenom_enfant: f.get("prenom_enfant"),
                                     sexe: Number(f.get("sexe")),
                                     date_naissance: f.get("date_naissance"),
+
                                     nom_mere: f.get("nom_mere"),
                                     prenom_mere: f.get("prenom_mere"),
+                                    age_mere: Number(f.get("age_mere")),
+                                    niveau_mere: Number(f.get("niveau_mere")),
+
                                     nom_pere: f.get("nom_pere"),
                                     prenom_pere: f.get("prenom_pere"),
+                                    age_pere: Number(f.get("age_pere")),
+                                    niveau_pere: Number(f.get("niveau_pere")),
+
+                                    lieu_naissance: f.get("lieu_naissance"),
+                                    assistance: Number(f.get("assistance")),
+                                    poids: Number(f.get("poids")),
+                                    taille: Number(f.get("taille")),
+                                    rang: Number(f.get("rang")),
+
+                                    milieu: Number(f.get("milieu")),
+                                    declare: Number(f.get("declare")),
+                                    date_declaration: f.get("date_declaration"),
                                 });
 
                                 e.currentTarget.reset();
                             }}
                         >
-                            <Input name="annee" placeholder="Année" required />
-                            <Input
-                                name="code_fokontany"
-                                placeholder="Code fokontany"
-                                required
-                            />
-                            <Input
-                                name="village"
-                                placeholder="Village"
-                                required
-                            />
+                            <div className="grid grid-cols-3 gap-2">
+                                <Input
+                                    name="annee"
+                                    placeholder="Année"
+                                    required
+                                />
+                                <Input
+                                    name="code_fokontany"
+                                    placeholder="Code fokontany"
+                                    required
+                                />
+                                <Input
+                                    name="village"
+                                    placeholder="Village"
+                                    required
+                                />
+                            </div>
 
-                            <Input
-                                name="nom_enfant"
-                                placeholder="Nom enfant"
-                                required
-                            />
-                            <Input
-                                name="prenom_enfant"
-                                placeholder="Prénom enfant"
-                                required
-                            />
+                            <div className="grid grid-cols-2 gap-2">
+                                <Input
+                                    name="nom_enfant"
+                                    placeholder="Nom enfant"
+                                    required
+                                />
+                                <Input
+                                    name="prenom_enfant"
+                                    placeholder="Prénom enfant"
+                                    required
+                                />
+                            </div>
 
-                            <Input
-                                name="sexe"
-                                placeholder="Sexe (1=M, 2=F)"
-                                required
-                            />
-                            <Input type="date" name="date_naissance" required />
+                            <div className="grid grid-cols-2 gap-2">
+                                <Input
+                                    name="sexe"
+                                    placeholder="Sexe (1=M, 2=F)"
+                                    required
+                                />
+                                <Input
+                                    type="date"
+                                    name="date_naissance"
+                                    required
+                                />
+                            </div>
 
-                            <Input
-                                name="nom_mere"
-                                placeholder="Nom mère"
-                                required
-                            />
-                            <Input
-                                name="prenom_mere"
-                                placeholder="Prénom mère"
-                                required
-                            />
+                            <div className="grid grid-cols-4 gap-2">
+                                <Input
+                                    name="nom_mere"
+                                    placeholder="Nom mère"
+                                    required
+                                />
+                                <Input
+                                    name="prenom_mere"
+                                    placeholder="Prénom mère"
+                                    required
+                                />
+                                <Input name="age_mere" placeholder="Âge mère" />
+                                <Input
+                                    name="niveau_mere"
+                                    placeholder="Niveau mère"
+                                />
+                            </div>
 
-                            <Input
-                                name="nom_pere"
-                                placeholder="Nom père"
-                                required
-                            />
-                            <Input
-                                name="prenom_pere"
-                                placeholder="Prénom père"
-                                required
-                            />
+                            <div className="grid grid-cols-4 gap-2">
+                                <Input
+                                    name="nom_pere"
+                                    placeholder="Nom père"
+                                    required
+                                />
+                                <Input
+                                    name="prenom_pere"
+                                    placeholder="Prénom père"
+                                    required
+                                />
+                                <Input name="age_pere" placeholder="Âge père" />
+                                <Input
+                                    name="niveau_pere"
+                                    placeholder="Niveau père"
+                                />
+                            </div>
+                            <div className="grid grid-cols-5 gap-2">
+                                <Input
+                                    name="lieu_naissance"
+                                    placeholder="Lieu naissance"
+                                />
+                                <Input
+                                    name="assistance"
+                                    placeholder="Assistance (0/1)"
+                                />
+                                <Input name="poids" placeholder="Poids (kg)" />
+                                <Input
+                                    name="taille"
+                                    placeholder="Taille (cm)"
+                                />
+                                <Input name="rang" placeholder="Rang" />
+                            </div>
+                            <div className="grid grid-cols-3 gap-2">
+                                <Input
+                                    name="milieu"
+                                    placeholder="Milieu (0/1)"
+                                />
+                                <Input
+                                    name="declare"
+                                    placeholder="Déclaré (0/1)"
+                                />
+                                <Input type="date" name="date_declaration" />
+                            </div>
 
                             <Button type="submit" className="w-full">
                                 Ajouter

@@ -1,8 +1,8 @@
 "use client";
-import { Trash2 } from "lucide-react";
-import { Plus } from "lucide-react";
 
 import * as React from "react";
+import { Trash2, Plus } from "lucide-react";
+
 import {
     Table,
     TableBody,
@@ -23,95 +23,163 @@ import {
 
 export default function DivorceTable({ data, onAdd, onDelete }) {
     const [search, setSearch] = React.useState("");
-    const [filteredData, setFilteredData] = React.useState(data);
 
-    React.useEffect(() => {
-        setFilteredData(
-            data.filter(
-                (item) =>
-                    item.nom_homme
-                        .toLowerCase()
-                        .includes(search.toLowerCase()) ||
-                    item.nom_femme
-                        .toLowerCase()
-                        .includes(search.toLowerCase()) ||
-                    item.village.toLowerCase().includes(search.toLowerCase()) ||
-                    item.motif.toLowerCase().includes(search.toLowerCase()),
-            ),
+    const filteredData = React.useMemo(() => {
+        return data.filter((item) =>
+            [item.nom_homme, item.nom_femme, item.village, item.motif]
+                .join(" ")
+                .toLowerCase()
+                .includes(search.toLowerCase()),
         );
     }, [search, data]);
 
     return (
-        <div className="p-4 overflow-hidden">
-            {/* Header */}
-            <div className="flex items-center justify-between mb-4 ">
+        <div className="p-4 space-y-4 overflow-hidden">
+            {/* Top actions */}
+            <div className="flex justify-between items-center">
                 <Input
-                    placeholder="Search divorce..."
+                    placeholder="Rechercher (homme, femme, village, motif...)"
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
-                    className="max-w-xs"
+                    className="max-w-sm"
                 />
 
                 <Dialog>
                     <DialogTrigger asChild>
-                        <Button
-                            variant="default"
-                            size="icon"
-                            aria-label="Add Naissance"
-                        >
+                        <Button size="icon">
                             <Plus className="h-5 w-5" />
                         </Button>
                     </DialogTrigger>
-                    <DialogContent>
+
+                    <DialogContent className="max-h-[90vh] overflow-y-auto">
                         <DialogHeader>
-                            <DialogTitle>Add New Divorce</DialogTitle>
+                            <DialogTitle>Nouveau divorce</DialogTitle>
                         </DialogHeader>
 
-                        {/* Form */}
                         <form
-                            className="space-y-2"
+                            className="grid grid-cols-2 gap-2"
                             onSubmit={(e) => {
                                 e.preventDefault();
-                                const formData = new FormData(e.currentTarget);
+                                const f = new FormData(e.currentTarget);
 
                                 onAdd({
                                     id: Date.now(),
-                                    annee: Number(formData.get("annee")),
-                                    village: formData.get("village"),
-                                    homme: formData.get("homme"),
-                                    femme: formData.get("femme"),
-                                    date_divorce: formData.get("date_divorce"),
-                                    motif: formData.get("motif"),
+                                    annee: Number(f.get("annee")),
+                                    code_fokontany: f.get("code_fokontany"),
+                                    village: f.get("village"),
+
+                                    nom_homme: f.get("nom_homme"),
+                                    prenom_homme: f.get("prenom_homme"),
+                                    age_homme: f.get("age_homme"),
+                                    niveau_homme: f.get("niveau_homme"),
+
+                                    nom_femme: f.get("nom_femme"),
+                                    prenom_femme: f.get("prenom_femme"),
+                                    age_femme: f.get("age_femme"),
+                                    niveau_femme: f.get("niveau_femme"),
+
+                                    date_mariage: f.get("date_mariage"),
+                                    date_divorce: f.get("date_divorce"),
+                                    motif: f.get("motif"),
+                                    lieu_divorce: f.get("lieu_divorce"),
+                                    milieu: f.get("milieu"),
+                                    declare: f.get("declare"),
+                                    date_declaration: f.get("date_declaration"),
                                 });
 
                                 e.currentTarget.reset();
                             }}
                         >
+                            {/* Infos générales */}
                             <Input name="annee" placeholder="Année" required />
+                            <Input
+                                name="code_fokontany"
+                                placeholder="Code fokontany"
+                                required
+                            />
                             <Input
                                 name="village"
                                 placeholder="Village"
                                 required
                             />
+
+                            {/* Homme */}
                             <Input
-                                name="homme"
-                                placeholder="Nom de l'homme"
+                                name="nom_homme"
+                                placeholder="Nom homme"
                                 required
                             />
                             <Input
-                                name="femme"
-                                placeholder="Nom de la femme"
+                                name="prenom_homme"
+                                placeholder="Prénom homme"
                                 required
                             />
-                            <Input name="date_divorce" type="date" required />
+                            <Input
+                                type="number"
+                                name="age_homme"
+                                placeholder="Âge homme"
+                            />
+                            <Input
+                                name="niveau_homme"
+                                placeholder="Niveau homme"
+                            />
+
+                            {/* Femme */}
+                            <Input
+                                name="nom_femme"
+                                placeholder="Nom femme"
+                                required
+                            />
+                            <Input
+                                name="prenom_femme"
+                                placeholder="Prénom femme"
+                                required
+                            />
+                            <Input
+                                type="number"
+                                name="age_femme"
+                                placeholder="Âge femme"
+                            />
+                            <Input
+                                name="niveau_femme"
+                                placeholder="Niveau femme"
+                            />
+
+                            {/* Dates */}
+                            <Input type="date" name="date_mariage" />
+                            <Input type="date" name="date_divorce" required />
+
                             <Input
                                 name="motif"
                                 placeholder="Motif du divorce"
-                                required
+                            />
+                            <Input
+                                name="lieu_divorce"
+                                placeholder="Lieu du divorce"
                             />
 
-                            <Button type="submit" className="w-full">
-                                Add
+                            <select
+                                name="milieu"
+                                className="border rounded px-2 py-1"
+                            >
+                                <option value="">Milieu</option>
+                                <option value="Urbain">Urbain</option>
+                                <option value="Rural">Rural</option>
+                            </select>
+
+                            <select
+                                name="declare"
+                                className="border rounded px-2 py-1"
+                            >
+                                <option value="">Déclaré ?</option>
+                                <option value="Oui">Oui</option>
+                                <option value="Non">Non</option>
+                            </select>
+
+                            <Input type="date" name="date_declaration" />
+
+                            <Button type="submit" className="col-span-2">
+                                Ajouter
                             </Button>
                         </form>
                     </DialogContent>
@@ -119,28 +187,28 @@ export default function DivorceTable({ data, onAdd, onDelete }) {
             </div>
 
             {/* Table */}
-            <Table className="overflow-hidden">
+            <Table>
                 <TableHeader>
                     <TableRow>
                         <TableHead>Année</TableHead>
-                        <TableHead>Code Fokontany</TableHead>
+                        <TableHead>Code</TableHead>
                         <TableHead>Village</TableHead>
-                        <TableHead>Nom Homme</TableHead>
-                        <TableHead>Prenom Homme</TableHead>
-                        <TableHead>Age Homme</TableHead>
-                        <TableHead>Niveau Homme</TableHead>
-                        <TableHead>Nom Femme</TableHead>
-                        <TableHead>Prenom Femme</TableHead>
-                        <TableHead>Age Femme</TableHead>
-                        <TableHead>Niveau femme</TableHead>
-                        <TableHead>Date Mariage</TableHead>
-                        <TableHead>Date Divorce</TableHead>
+                        <TableHead>Nom homme</TableHead>
+                        <TableHead>Prénom</TableHead>
+                        <TableHead>Âge</TableHead>
+                        <TableHead>Niveau</TableHead>
+                        <TableHead>Nom femme</TableHead>
+                        <TableHead>Prénom</TableHead>
+                        <TableHead>Âge</TableHead>
+                        <TableHead>Niveau</TableHead>
+                        <TableHead>Date mariage</TableHead>
+                        <TableHead>Date divorce</TableHead>
                         <TableHead>Motif</TableHead>
-                        <TableHead>Lieu divorce</TableHead>
+                        <TableHead>Lieu</TableHead>
                         <TableHead>Milieu</TableHead>
-                        <TableHead>Declare</TableHead>
-                        <TableHead>Date declaration</TableHead>
-                        <TableHead>Action</TableHead>
+                        <TableHead>Déclaré</TableHead>
+                        <TableHead>Date déclaration</TableHead>
+                        <TableHead className="text-center">Action</TableHead>
                     </TableRow>
                 </TableHeader>
 
@@ -165,14 +233,13 @@ export default function DivorceTable({ data, onAdd, onDelete }) {
                             <TableCell>{row.milieu}</TableCell>
                             <TableCell>{row.declare}</TableCell>
                             <TableCell>{row.date_declaration}</TableCell>
-                            <TableCell>
+                            <TableCell className="text-center">
                                 <Button
                                     variant="ghost"
                                     size="icon"
                                     onClick={() => onDelete(row.id)}
-                                    aria-label="Delete"
                                 >
-                                    <Trash2 className="h-4 w-4 text-red-500 cursor-pointer" />
+                                    <Trash2 className="h-4 w-4 text-red-500" />
                                 </Button>
                             </TableCell>
                         </TableRow>
@@ -181,10 +248,10 @@ export default function DivorceTable({ data, onAdd, onDelete }) {
                     {filteredData.length === 0 && (
                         <TableRow>
                             <TableCell
-                                colSpan={7}
+                                colSpan={19}
                                 className="text-center text-muted-foreground"
                             >
-                                No divorce found
+                                Aucun divorce trouvé
                             </TableCell>
                         </TableRow>
                     )}

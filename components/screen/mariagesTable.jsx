@@ -1,7 +1,8 @@
 "use client";
-import { Trash2 } from "lucide-react";
-import { Plus } from "lucide-react";
+
 import * as React from "react";
+import { Trash2, Plus } from "lucide-react";
+
 import {
     Table,
     TableBody,
@@ -22,128 +23,185 @@ import {
 
 export default function MariageTable({ data, onAdd, onDelete }) {
     const [search, setSearch] = React.useState("");
-    const [filteredData, setFilteredData] = React.useState(data);
 
-    React.useEffect(() => {
-        setFilteredData(
-            data.filter(
-                (item) =>
-                    item.nom_epoux
-                        .toLowerCase()
-                        .includes(search.toLowerCase()) ||
-                    item.nom_epouse
-                        .toLowerCase()
-                        .includes(search.toLowerCase()) ||
-                    item.village.toLowerCase().includes(search.toLowerCase()),
-            ),
+    const filteredData = React.useMemo(() => {
+        return data.filter((item) =>
+            [item.nom_epoux, item.nom_epouse, item.village]
+                .join(" ")
+                .toLowerCase()
+                .includes(search.toLowerCase()),
         );
     }, [search, data]);
 
     return (
-        <div className="p-4 overflow-hidden">
-            <div className="flex justify-between mb-4">
+        <div className="p-4 space-y-4 overflow-hidden">
+            {/* Top actions */}
+            <div className="flex justify-between items-center">
                 <Input
-                    placeholder="Search..."
+                    placeholder="Rechercher (époux, épouse, village...)"
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
-                    className="max-w-xs"
+                    className="max-w-sm"
                 />
 
                 <Dialog>
                     <DialogTrigger asChild>
-                        <Button
-                            variant="default"
-                            size="icon"
-                            aria-label="Add Naissance"
-                        >
+                        <Button size="icon">
                             <Plus className="h-5 w-5" />
                         </Button>
                     </DialogTrigger>
-                    <DialogContent>
+
+                    <DialogContent className="max-h-[90vh] overflow-y-auto">
                         <DialogHeader>
-                            <DialogTitle>Add New Mariage</DialogTitle>
+                            <DialogTitle>Nouveau mariage</DialogTitle>
                         </DialogHeader>
-                        {/* Form */}
+
                         <form
+                            className="grid grid-cols-2 gap-2"
                             onSubmit={(e) => {
                                 e.preventDefault();
-                                const formData = new FormData(e.currentTarget);
+                                const f = new FormData(e.currentTarget);
+
                                 onAdd({
                                     id: Date.now(),
-                                    annee: formData.get("annee"),
-                                    village: formData.get("village"),
-                                    nom_epoux: formData.get("epoux"),
-                                    nom_epouse: formData.get("epouse"),
-                                    date_mariage: formData.get("date_mariage"),
-                                    lieu: formData.get("lieu"),
+                                    annee: Number(f.get("annee")),
+                                    code_fokontany: f.get("code_fokontany"),
+                                    village: f.get("village"),
+
+                                    nom_epoux: f.get("nom_epoux"),
+                                    prenom_epoux: f.get("prenom_epoux"),
+                                    age_epoux: f.get("age_epoux"),
+                                    niveau_epoux: f.get("niveau_epoux"),
+
+                                    nom_epouse: f.get("nom_epouse"),
+                                    prenom_epouse: f.get("prenom_epouse"),
+                                    age_epouse: f.get("age_epouse"),
+                                    niveau_epouse: f.get("niveau_epouse"),
+
+                                    date_mariage: f.get("date_mariage"),
+                                    lieu_mariage: f.get("lieu_mariage"),
+                                    milieu: f.get("milieu"),
+                                    declare: f.get("declare"),
+                                    date_declaration: f.get("date_declaration"),
                                 });
+
                                 e.currentTarget.reset();
                             }}
                         >
+                            {/* Infos générales */}
+                            <Input name="annee" placeholder="Année" required />
                             <Input
-                                name="annee"
-                                placeholder="Année"
+                                name="code_fokontany"
+                                placeholder="Code fokontany"
                                 required
-                                className="mb-2"
                             />
                             <Input
                                 name="village"
                                 placeholder="Village"
                                 required
-                                className="mb-2"
+                            />
+
+                            {/* Epoux */}
+                            <Input
+                                name="nom_epoux"
+                                placeholder="Nom époux"
+                                required
                             />
                             <Input
-                                name="epoux"
-                                placeholder="Nom Epoux"
+                                name="prenom_epoux"
+                                placeholder="Prénom époux"
                                 required
-                                className="mb-2"
                             />
                             <Input
-                                name="epouse"
-                                placeholder="Nom Epouse"
-                                required
-                                className="mb-2"
+                                type="number"
+                                name="age_epoux"
+                                placeholder="Âge époux"
                             />
                             <Input
-                                name="date_mariage"
-                                type="date"
-                                placeholder="Date Mariage"
+                                name="niveau_epoux"
+                                placeholder="Niveau époux"
+                            />
+
+                            {/* Epouse */}
+                            <Input
+                                name="nom_epouse"
+                                placeholder="Nom épouse"
                                 required
-                                className="mb-2"
                             />
                             <Input
-                                name="lieu"
-                                placeholder="Lieu"
+                                name="prenom_epouse"
+                                placeholder="Prénom épouse"
                                 required
-                                className="mb-2"
                             />
-                            <Button type="submit">Add</Button>
+                            <Input
+                                type="number"
+                                name="age_epouse"
+                                placeholder="Âge épouse"
+                            />
+                            <Input
+                                name="niveau_epouse"
+                                placeholder="Niveau épouse"
+                            />
+
+                            {/* Mariage */}
+                            <Input type="date" name="date_mariage" required />
+                            <Input
+                                name="lieu_mariage"
+                                placeholder="Lieu de mariage"
+                            />
+
+                            <select
+                                name="milieu"
+                                className="border rounded px-2 py-1"
+                            >
+                                <option value="">Milieu</option>
+                                <option value="Urbain">Urbain</option>
+                                <option value="Rural">Rural</option>
+                            </select>
+
+                            <select
+                                name="declare"
+                                className="border rounded px-2 py-1"
+                            >
+                                <option value="">Déclaré ?</option>
+                                <option value="Oui">Oui</option>
+                                <option value="Non">Non</option>
+                            </select>
+
+                            <Input type="date" name="date_declaration" />
+
+                            <Button type="submit" className="col-span-2">
+                                Ajouter
+                            </Button>
                         </form>
                     </DialogContent>
                 </Dialog>
             </div>
 
+            {/* Table */}
             <Table>
                 <TableHeader>
                     <TableRow>
                         <TableHead>Année</TableHead>
-                        <TableHead>Code fokotany</TableHead>
+                        <TableHead>Code</TableHead>
                         <TableHead>Village</TableHead>
-                        <TableHead>Nom Epoux</TableHead>
-                        <TableHead>Prenom Epoux</TableHead>
-                        <TableHead>Age Epoux</TableHead>
-                        <TableHead>Niveaux Epoux</TableHead>
-                        <TableHead>Nom Epouse</TableHead>
-                        <TableHead>Prenom Epouse</TableHead>
-                        <TableHead>Age epouse</TableHead>
-                        <TableHead>Niveau epouse</TableHead>
-                        <TableHead>Date de mariage</TableHead>
-                        <TableHead>Lieu de mariage</TableHead>
+                        <TableHead>Nom époux</TableHead>
+                        <TableHead>Prénom époux</TableHead>
+                        <TableHead>Âge</TableHead>
+                        <TableHead>Niveau</TableHead>
+                        <TableHead>Nom épouse</TableHead>
+                        <TableHead>Prénom épouse</TableHead>
+                        <TableHead>Âge</TableHead>
+                        <TableHead>Niveau</TableHead>
+                        <TableHead>Date</TableHead>
+                        <TableHead>Lieu</TableHead>
                         <TableHead>Milieu</TableHead>
-                        <TableHead>declare</TableHead>
-                        <TableHead>date de declaration</TableHead>
+                        <TableHead>Déclaré</TableHead>
+                        <TableHead>Date déclaration</TableHead>
+                        <TableHead className="text-center">Action</TableHead>
                     </TableRow>
                 </TableHeader>
+
                 <TableBody>
                     {filteredData.map((row) => (
                         <TableRow key={row.id}>
@@ -163,14 +221,13 @@ export default function MariageTable({ data, onAdd, onDelete }) {
                             <TableCell>{row.milieu}</TableCell>
                             <TableCell>{row.declare}</TableCell>
                             <TableCell>{row.date_declaration}</TableCell>
-                            <TableCell>
+                            <TableCell className="text-center">
                                 <Button
                                     variant="ghost"
                                     size="icon"
                                     onClick={() => onDelete(row.id)}
-                                    aria-label="Delete"
                                 >
-                                    <Trash2 className="h-4 w-4 text-red-500 cursor-pointer" />
+                                    <Trash2 className="h-4 w-4 text-red-500" />
                                 </Button>
                             </TableCell>
                         </TableRow>
