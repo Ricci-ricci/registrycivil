@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Trash2, Plus } from "lucide-react";
+import { Trash2, Plus, Pencil } from "lucide-react";
 
 import {
     Table,
@@ -10,18 +10,18 @@ import {
     TableHead,
     TableHeader,
     TableRow,
-} from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+} from "../ui/table";
+import { Button } from "../ui/button";
+import { Input } from "../ui/input";
 import {
     Dialog,
     DialogContent,
     DialogHeader,
     DialogTitle,
     DialogTrigger,
-} from "@/components/ui/dialog";
+} from "../ui/dialog";
 
-export default function MariageTable({ data, onAdd, onDelete }) {
+export default function MariageTable({ data, onAdd, onUpdate, onDelete }) {
     const [search, setSearch] = React.useState("");
 
     const filteredData = React.useMemo(() => {
@@ -221,7 +221,198 @@ export default function MariageTable({ data, onAdd, onDelete }) {
                             <TableCell>{row.milieu}</TableCell>
                             <TableCell>{row.declare}</TableCell>
                             <TableCell>{row.date_declaration}</TableCell>
-                            <TableCell className="text-center">
+                            <TableCell className="text-center flex items-center justify-center gap-2">
+                                <Dialog>
+                                    <DialogTrigger asChild>
+                                        <Button variant="ghost" size="icon">
+                                            <Pencil className="h-4 w-4" />
+                                        </Button>
+                                    </DialogTrigger>
+
+                                    <DialogContent className="max-h-[90vh] overflow-y-auto">
+                                        <DialogHeader>
+                                            <DialogTitle>
+                                                Modifier mariage
+                                            </DialogTitle>
+                                        </DialogHeader>
+
+                                        <form
+                                            className="grid grid-cols-2 gap-2"
+                                            onSubmit={(e) => {
+                                                e.preventDefault();
+                                                const f = new FormData(
+                                                    e.currentTarget,
+                                                );
+
+                                                onUpdate({
+                                                    ...row,
+                                                    annee: Number(
+                                                        f.get("annee"),
+                                                    ),
+                                                    code_fokontany:
+                                                        f.get("code_fokontany"),
+                                                    village: f.get("village"),
+
+                                                    nom_epoux:
+                                                        f.get("nom_epoux"),
+                                                    prenom_epoux:
+                                                        f.get("prenom_epoux"),
+                                                    age_epoux:
+                                                        f.get("age_epoux"),
+                                                    niveau_epoux:
+                                                        f.get("niveau_epoux"),
+
+                                                    nom_epouse:
+                                                        f.get("nom_epouse"),
+                                                    prenom_epouse:
+                                                        f.get("prenom_epouse"),
+                                                    age_epouse:
+                                                        f.get("age_epouse"),
+                                                    niveau_epouse:
+                                                        f.get("niveau_epouse"),
+
+                                                    date_mariage:
+                                                        f.get("date_mariage"),
+                                                    lieu_mariage:
+                                                        f.get("lieu_mariage"),
+                                                    milieu: f.get("milieu"),
+                                                    declare: f.get("declare"),
+                                                    date_declaration:
+                                                        f.get(
+                                                            "date_declaration",
+                                                        ),
+                                                });
+                                            }}
+                                        >
+                                            {/* Infos générales */}
+                                            <Input
+                                                name="annee"
+                                                placeholder="Année"
+                                                defaultValue={row.annee}
+                                                required
+                                            />
+                                            <Input
+                                                name="code_fokontany"
+                                                placeholder="Code fokontany"
+                                                defaultValue={
+                                                    row.code_fokontany
+                                                }
+                                                required
+                                            />
+                                            <Input
+                                                name="village"
+                                                placeholder="Village"
+                                                defaultValue={row.village}
+                                                required
+                                            />
+
+                                            {/* Epoux */}
+                                            <Input
+                                                name="nom_epoux"
+                                                placeholder="Nom époux"
+                                                defaultValue={row.nom_epoux}
+                                                required
+                                            />
+                                            <Input
+                                                name="prenom_epoux"
+                                                placeholder="Prénom époux"
+                                                defaultValue={row.prenom_epoux}
+                                                required
+                                            />
+                                            <Input
+                                                type="number"
+                                                name="age_epoux"
+                                                placeholder="Âge époux"
+                                                defaultValue={row.age_epoux}
+                                            />
+                                            <Input
+                                                name="niveau_epoux"
+                                                placeholder="Niveau époux"
+                                                defaultValue={row.niveau_epoux}
+                                            />
+
+                                            {/* Epouse */}
+                                            <Input
+                                                name="nom_epouse"
+                                                placeholder="Nom épouse"
+                                                defaultValue={row.nom_epouse}
+                                                required
+                                            />
+                                            <Input
+                                                name="prenom_epouse"
+                                                placeholder="Prénom épouse"
+                                                defaultValue={row.prenom_epouse}
+                                                required
+                                            />
+                                            <Input
+                                                type="number"
+                                                name="age_epouse"
+                                                placeholder="Âge épouse"
+                                                defaultValue={row.age_epouse}
+                                            />
+                                            <Input
+                                                name="niveau_epouse"
+                                                placeholder="Niveau épouse"
+                                                defaultValue={row.niveau_epouse}
+                                            />
+
+                                            {/* Mariage */}
+                                            <Input
+                                                type="date"
+                                                name="date_mariage"
+                                                defaultValue={row.date_mariage}
+                                                required
+                                            />
+                                            <Input
+                                                name="lieu_mariage"
+                                                placeholder="Lieu de mariage"
+                                                defaultValue={row.lieu_mariage}
+                                            />
+
+                                            <select
+                                                name="milieu"
+                                                className="border rounded px-2 py-1"
+                                                defaultValue={row.milieu}
+                                            >
+                                                <option value="">Milieu</option>
+                                                <option value="Urbain">
+                                                    Urbain
+                                                </option>
+                                                <option value="Rural">
+                                                    Rural
+                                                </option>
+                                            </select>
+
+                                            <select
+                                                name="declare"
+                                                className="border rounded px-2 py-1"
+                                                defaultValue={row.declare}
+                                            >
+                                                <option value="">
+                                                    Déclaré ?
+                                                </option>
+                                                <option value="Oui">Oui</option>
+                                                <option value="Non">Non</option>
+                                            </select>
+
+                                            <Input
+                                                type="date"
+                                                name="date_declaration"
+                                                defaultValue={
+                                                    row.date_declaration
+                                                }
+                                            />
+
+                                            <Button
+                                                type="submit"
+                                                className="col-span-2"
+                                            >
+                                                Modifier
+                                            </Button>
+                                        </form>
+                                    </DialogContent>
+                                </Dialog>
+
                                 <Button
                                     variant="ghost"
                                     size="icon"

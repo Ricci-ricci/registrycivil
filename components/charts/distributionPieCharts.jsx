@@ -2,7 +2,7 @@
 
 import { PieChart, Pie, Tooltip, ResponsiveContainer, Cell } from "recharts";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 
 const COLORS = ["#22c55e", "#3b82f6", "#f97316", "#ef4444"];
 

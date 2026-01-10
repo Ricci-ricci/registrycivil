@@ -1,8 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Trash2 } from "lucide-react";
-import { Plus } from "lucide-react";
+import { Trash2, Plus, Pencil } from "lucide-react";
 
 import {
     Table,
@@ -11,10 +10,10 @@ import {
     TableHead,
     TableHeader,
     TableRow,
-} from "@/components/ui/table";
+} from "../ui/table";
 
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Button } from "../ui/button";
+import { Input } from "../ui/input";
 
 import {
     Dialog,
@@ -22,9 +21,9 @@ import {
     DialogHeader,
     DialogTitle,
     DialogTrigger,
-} from "@/components/ui/dialog";
+} from "../ui/dialog";
 
-export default function NaissanceTable({ data, onAdd, onDelete }) {
+export default function NaissanceTable({ data, onAdd, onUpdate, onDelete }) {
     const [search, setSearch] = React.useState("");
 
     const filteredData = React.useMemo(() => {
@@ -76,7 +75,7 @@ export default function NaissanceTable({ data, onAdd, onDelete }) {
                                 const f = new FormData(e.currentTarget);
 
                                 onAdd({
-                                    id_naissance: Date.now(),
+                                    id: Date.now(),
                                     annee: Number(f.get("annee")),
                                     code_fokontany: Number(
                                         f.get("code_fokontany"),
@@ -284,11 +283,272 @@ export default function NaissanceTable({ data, onAdd, onDelete }) {
                             <TableCell>{row.milieu}</TableCell>
                             <TableCell>{row.declare}</TableCell>
                             <TableCell>{row.date_declaration}</TableCell>
-                            <TableCell className="text-center">
+                            <TableCell className="text-center flex items-center justify-center gap-2">
+                                <Dialog>
+                                    <DialogTrigger asChild>
+                                        <Button variant="ghost" size="icon">
+                                            <Pencil className="h-4 w-4" />
+                                        </Button>
+                                    </DialogTrigger>
+                                    <DialogContent>
+                                        <DialogHeader>
+                                            <DialogTitle>
+                                                Modifier naissance
+                                            </DialogTitle>
+                                        </DialogHeader>
+                                        <form
+                                            className="space-y-6"
+                                            onSubmit={(e) => {
+                                                e.preventDefault();
+                                                const f = new FormData(
+                                                    e.currentTarget,
+                                                );
+
+                                                onUpdate({
+                                                    ...row,
+                                                    annee: Number(
+                                                        f.get("annee"),
+                                                    ),
+                                                    code_fokontany: Number(
+                                                        f.get("code_fokontany"),
+                                                    ),
+                                                    village: f.get("village"),
+
+                                                    nom_enfant:
+                                                        f.get("nom_enfant"),
+                                                    prenom_enfant:
+                                                        f.get("prenom_enfant"),
+                                                    sexe: Number(f.get("sexe")),
+                                                    date_naissance:
+                                                        f.get("date_naissance"),
+
+                                                    nom_mere: f.get("nom_mere"),
+                                                    prenom_mere:
+                                                        f.get("prenom_mere"),
+                                                    age_mere: Number(
+                                                        f.get("age_mere"),
+                                                    ),
+                                                    niveau_mere: Number(
+                                                        f.get("niveau_mere"),
+                                                    ),
+
+                                                    nom_pere: f.get("nom_pere"),
+                                                    prenom_pere:
+                                                        f.get("prenom_pere"),
+                                                    age_pere: Number(
+                                                        f.get("age_pere"),
+                                                    ),
+                                                    niveau_pere: Number(
+                                                        f.get("niveau_pere"),
+                                                    ),
+
+                                                    lieu_naissance:
+                                                        f.get("lieu_naissance"),
+                                                    assistance: Number(
+                                                        f.get("assistance"),
+                                                    ),
+                                                    poids: Number(
+                                                        f.get("poids"),
+                                                    ),
+                                                    taille: Number(
+                                                        f.get("taille"),
+                                                    ),
+                                                    rang: Number(f.get("rang")),
+
+                                                    milieu: Number(
+                                                        f.get("milieu"),
+                                                    ),
+                                                    declare: Number(
+                                                        f.get("declare"),
+                                                    ),
+                                                    date_declaration:
+                                                        f.get(
+                                                            "date_declaration",
+                                                        ),
+                                                });
+                                            }}
+                                        >
+                                            <div className="grid grid-cols-3 gap-2">
+                                                <Input
+                                                    name="annee"
+                                                    placeholder="Année"
+                                                    defaultValue={row.annee}
+                                                    required
+                                                />
+                                                <Input
+                                                    name="code_fokontany"
+                                                    placeholder="Code fokontany"
+                                                    defaultValue={
+                                                        row.code_fokontany
+                                                    }
+                                                    required
+                                                />
+                                                <Input
+                                                    name="village"
+                                                    placeholder="Village"
+                                                    defaultValue={row.village}
+                                                    required
+                                                />
+                                            </div>
+
+                                            <div className="grid grid-cols-2 gap-2">
+                                                <Input
+                                                    name="nom_enfant"
+                                                    placeholder="Nom enfant"
+                                                    defaultValue={
+                                                        row.nom_enfant
+                                                    }
+                                                    required
+                                                />
+                                                <Input
+                                                    name="prenom_enfant"
+                                                    placeholder="Prénom enfant"
+                                                    defaultValue={
+                                                        row.prenom_enfant
+                                                    }
+                                                    required
+                                                />
+                                            </div>
+
+                                            <div className="grid grid-cols-2 gap-2">
+                                                <Input
+                                                    name="sexe"
+                                                    placeholder="Sexe (1=M, 2=F)"
+                                                    defaultValue={row.sexe}
+                                                    required
+                                                />
+                                                <Input
+                                                    type="date"
+                                                    name="date_naissance"
+                                                    defaultValue={
+                                                        row.date_naissance
+                                                    }
+                                                    required
+                                                />
+                                            </div>
+
+                                            <div className="grid grid-cols-4 gap-2">
+                                                <Input
+                                                    name="nom_mere"
+                                                    placeholder="Nom mère"
+                                                    defaultValue={row.nom_mere}
+                                                    required
+                                                />
+                                                <Input
+                                                    name="prenom_mere"
+                                                    placeholder="Prénom mère"
+                                                    defaultValue={
+                                                        row.prenom_mere
+                                                    }
+                                                    required
+                                                />
+                                                <Input
+                                                    name="age_mere"
+                                                    placeholder="Âge mère"
+                                                    defaultValue={row.age_mere}
+                                                />
+                                                <Input
+                                                    name="niveau_mere"
+                                                    placeholder="Niveau mère"
+                                                    defaultValue={
+                                                        row.niveau_mere
+                                                    }
+                                                />
+                                            </div>
+
+                                            <div className="grid grid-cols-4 gap-2">
+                                                <Input
+                                                    name="nom_pere"
+                                                    placeholder="Nom père"
+                                                    defaultValue={row.nom_pere}
+                                                    required
+                                                />
+                                                <Input
+                                                    name="prenom_pere"
+                                                    placeholder="Prénom père"
+                                                    defaultValue={
+                                                        row.prenom_pere
+                                                    }
+                                                    required
+                                                />
+                                                <Input
+                                                    name="age_pere"
+                                                    placeholder="Âge père"
+                                                    defaultValue={row.age_pere}
+                                                />
+                                                <Input
+                                                    name="niveau_pere"
+                                                    placeholder="Niveau père"
+                                                    defaultValue={
+                                                        row.niveau_pere
+                                                    }
+                                                />
+                                            </div>
+                                            <div className="grid grid-cols-5 gap-2">
+                                                <Input
+                                                    name="lieu_naissance"
+                                                    placeholder="Lieu naissance"
+                                                    defaultValue={
+                                                        row.lieu_naissance
+                                                    }
+                                                />
+                                                <Input
+                                                    name="assistance"
+                                                    placeholder="Assistance (0/1)"
+                                                    defaultValue={
+                                                        row.assistance
+                                                    }
+                                                />
+                                                <Input
+                                                    name="poids"
+                                                    placeholder="Poids (kg)"
+                                                    defaultValue={row.poids}
+                                                />
+                                                <Input
+                                                    name="taille"
+                                                    placeholder="Taille (cm)"
+                                                    defaultValue={row.taille}
+                                                />
+                                                <Input
+                                                    name="rang"
+                                                    placeholder="Rang"
+                                                    defaultValue={row.rang}
+                                                />
+                                            </div>
+                                            <div className="grid grid-cols-3 gap-2">
+                                                <Input
+                                                    name="milieu"
+                                                    placeholder="Milieu (0/1)"
+                                                    defaultValue={row.milieu}
+                                                />
+                                                <Input
+                                                    name="declare"
+                                                    placeholder="Déclaré (0/1)"
+                                                    defaultValue={row.declare}
+                                                />
+                                                <Input
+                                                    type="date"
+                                                    name="date_declaration"
+                                                    defaultValue={
+                                                        row.date_declaration
+                                                    }
+                                                />
+                                            </div>
+
+                                            <Button
+                                                type="submit"
+                                                className="w-full"
+                                            >
+                                                Modifier
+                                            </Button>
+                                        </form>
+                                    </DialogContent>
+                                </Dialog>
+
                                 <Button
                                     variant="ghost"
                                     size="icon"
-                                    onClick={() => onDelete(row.id_naissance)}
+                                    onClick={() => onDelete(row.id)}
                                 >
                                     <Trash2 className="h-4 w-4 text-red-500" />
                                 </Button>

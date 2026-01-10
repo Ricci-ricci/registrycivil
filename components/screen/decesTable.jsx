@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Trash2, Plus } from "lucide-react";
+import { Trash2, Plus, Pencil } from "lucide-react";
 
 import {
     Table,
@@ -10,18 +10,18 @@ import {
     TableHead,
     TableHeader,
     TableRow,
-} from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+} from "../ui/table";
+import { Button } from "../ui/button";
+import { Input } from "../ui/input";
 import {
     Dialog,
     DialogContent,
     DialogHeader,
     DialogTitle,
     DialogTrigger,
-} from "@/components/ui/dialog";
+} from "../ui/dialog";
 
-export default function DecesTable({ data, onAdd, onDelete }) {
+export default function DecesTable({ data, onAdd, onUpdate, onDelete }) {
     const [search, setSearch] = React.useState("");
 
     const filteredData = React.useMemo(() => {
@@ -202,7 +202,182 @@ export default function DecesTable({ data, onAdd, onDelete }) {
                             <TableCell>{row.milieu}</TableCell>
                             <TableCell>{row.declare}</TableCell>
                             <TableCell>{row.date_declaration}</TableCell>
-                            <TableCell className="text-center">
+                            <TableCell className="text-center flex items-center justify-center gap-2">
+                                <Dialog>
+                                    <DialogTrigger asChild>
+                                        <Button variant="ghost" size="icon">
+                                            <Pencil className="h-4 w-4" />
+                                        </Button>
+                                    </DialogTrigger>
+
+                                    <DialogContent className="max-h-[90vh] overflow-y-auto">
+                                        <DialogHeader>
+                                            <DialogTitle>
+                                                Modifier décès
+                                            </DialogTitle>
+                                        </DialogHeader>
+
+                                        <form
+                                            className="grid grid-cols-2 gap-2"
+                                            onSubmit={(e) => {
+                                                e.preventDefault();
+                                                const f = new FormData(
+                                                    e.currentTarget,
+                                                );
+
+                                                onUpdate({
+                                                    ...row,
+                                                    annee: Number(
+                                                        f.get("annee"),
+                                                    ),
+                                                    code_fokontany:
+                                                        f.get("code_fokontany"),
+                                                    village: f.get("village"),
+
+                                                    nom_defunt:
+                                                        f.get("nom_defunt"),
+                                                    prenom_defunt:
+                                                        f.get("prenom_defunt"),
+                                                    sexe: f.get("sexe"),
+
+                                                    date_naissance:
+                                                        f.get("date_naissance"),
+                                                    date_deces:
+                                                        f.get("date_deces"),
+
+                                                    cause_deces:
+                                                        f.get("cause_deces"),
+                                                    lieu_deces:
+                                                        f.get("lieu_deces"),
+                                                    milieu: f.get("milieu"),
+                                                    declare: f.get("declare"),
+                                                    date_declaration:
+                                                        f.get(
+                                                            "date_declaration",
+                                                        ),
+                                                });
+                                            }}
+                                        >
+                                            {/* Général */}
+                                            <Input
+                                                name="annee"
+                                                placeholder="Année"
+                                                defaultValue={row.annee}
+                                                required
+                                            />
+                                            <Input
+                                                name="code_fokontany"
+                                                placeholder="Code fokontany"
+                                                defaultValue={
+                                                    row.code_fokontany
+                                                }
+                                                required
+                                            />
+                                            <Input
+                                                name="village"
+                                                placeholder="Village"
+                                                defaultValue={row.village}
+                                                required
+                                            />
+
+                                            {/* Identité */}
+                                            <Input
+                                                name="nom_defunt"
+                                                placeholder="Nom du défunt"
+                                                defaultValue={row.nom_defunt}
+                                                required
+                                            />
+                                            <Input
+                                                name="prenom_defunt"
+                                                placeholder="Prénom du défunt"
+                                                defaultValue={row.prenom_defunt}
+                                                required
+                                            />
+
+                                            <select
+                                                name="sexe"
+                                                className="border rounded px-2 py-1"
+                                                defaultValue={row.sexe}
+                                                required
+                                            >
+                                                <option value="">Sexe</option>
+                                                <option value="M">
+                                                    Masculin
+                                                </option>
+                                                <option value="F">
+                                                    Féminin
+                                                </option>
+                                            </select>
+
+                                            <Input
+                                                type="date"
+                                                name="date_naissance"
+                                                defaultValue={
+                                                    row.date_naissance
+                                                }
+                                            />
+                                            <Input
+                                                type="date"
+                                                name="date_deces"
+                                                defaultValue={row.date_deces}
+                                                required
+                                            />
+
+                                            <Input
+                                                name="cause_deces"
+                                                placeholder="Cause du décès"
+                                                defaultValue={row.cause_deces}
+                                            />
+                                            <Input
+                                                name="lieu_deces"
+                                                placeholder="Lieu du décès"
+                                                defaultValue={row.lieu_deces}
+                                            />
+
+                                            <select
+                                                name="milieu"
+                                                className="border rounded px-2 py-1"
+                                                defaultValue={row.milieu}
+                                            >
+                                                <option value="">Milieu</option>
+                                                <option value="Urbain">
+                                                    Urbain
+                                                </option>
+                                                <option value="Rural">
+                                                    Rural
+                                                </option>
+                                            </select>
+
+                                            <select
+                                                name="declare"
+                                                className="border rounded px-2 py-1"
+                                                defaultValue={row.declare}
+                                            >
+                                                <option value="">
+                                                    Déclaré ?
+                                                </option>
+                                                <option value="Oui">Oui</option>
+                                                <option value="Non">Non</option>
+                                            </select>
+
+                                            <Input
+                                                type="date"
+                                                name="date_declaration"
+                                                defaultValue={
+                                                    row.date_declaration
+                                                }
+                                            />
+
+                                            <Button
+                                                type="submit"
+                                                className="col-span-2"
+                                            >
+                                                Modifier
+                                            </Button>
+                                        </form>
+                                    </DialogContent>
+                                </Dialog>
+
                                 <Button
                                     variant="ghost"
                                     size="icon"

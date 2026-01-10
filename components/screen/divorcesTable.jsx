@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Trash2, Plus } from "lucide-react";
+import { Trash2, Plus, Pencil } from "lucide-react";
 
 import {
     Table,
@@ -10,18 +10,18 @@ import {
     TableHead,
     TableHeader,
     TableRow,
-} from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+} from "../ui/table";
+import { Button } from "../ui/button";
+import { Input } from "../ui/input";
 import {
     Dialog,
     DialogContent,
     DialogHeader,
     DialogTitle,
     DialogTrigger,
-} from "@/components/ui/dialog";
+} from "../ui/dialog";
 
-export default function DivorceTable({ data, onAdd, onDelete }) {
+export default function DivorceTable({ data, onAdd, onUpdate, onDelete }) {
     const [search, setSearch] = React.useState("");
 
     const filteredData = React.useMemo(() => {
@@ -233,7 +233,212 @@ export default function DivorceTable({ data, onAdd, onDelete }) {
                             <TableCell>{row.milieu}</TableCell>
                             <TableCell>{row.declare}</TableCell>
                             <TableCell>{row.date_declaration}</TableCell>
-                            <TableCell className="text-center">
+                            <TableCell className="text-center flex items-center justify-center gap-2">
+                                <Dialog>
+                                    <DialogTrigger asChild>
+                                        <Button variant="ghost" size="icon">
+                                            <Pencil className="h-4 w-4" />
+                                        </Button>
+                                    </DialogTrigger>
+
+                                    <DialogContent className="max-h-[90vh] overflow-y-auto">
+                                        <DialogHeader>
+                                            <DialogTitle>
+                                                Modifier divorce
+                                            </DialogTitle>
+                                        </DialogHeader>
+
+                                        <form
+                                            className="grid grid-cols-2 gap-2"
+                                            onSubmit={(e) => {
+                                                e.preventDefault();
+                                                const f = new FormData(
+                                                    e.currentTarget,
+                                                );
+
+                                                onUpdate({
+                                                    ...row,
+                                                    annee: Number(
+                                                        f.get("annee"),
+                                                    ),
+                                                    code_fokontany:
+                                                        f.get("code_fokontany"),
+                                                    village: f.get("village"),
+
+                                                    nom_homme:
+                                                        f.get("nom_homme"),
+                                                    prenom_homme:
+                                                        f.get("prenom_homme"),
+                                                    age_homme:
+                                                        f.get("age_homme"),
+                                                    niveau_homme:
+                                                        f.get("niveau_homme"),
+
+                                                    nom_femme:
+                                                        f.get("nom_femme"),
+                                                    prenom_femme:
+                                                        f.get("prenom_femme"),
+                                                    age_femme:
+                                                        f.get("age_femme"),
+                                                    niveau_femme:
+                                                        f.get("niveau_femme"),
+
+                                                    date_mariage:
+                                                        f.get("date_mariage"),
+                                                    date_divorce:
+                                                        f.get("date_divorce"),
+                                                    motif: f.get("motif"),
+                                                    lieu_divorce:
+                                                        f.get("lieu_divorce"),
+                                                    milieu: f.get("milieu"),
+                                                    declare: f.get("declare"),
+                                                    date_declaration:
+                                                        f.get(
+                                                            "date_declaration",
+                                                        ),
+                                                });
+                                            }}
+                                        >
+                                            {/* Infos générales */}
+                                            <Input
+                                                name="annee"
+                                                placeholder="Année"
+                                                defaultValue={row.annee}
+                                                required
+                                            />
+                                            <Input
+                                                name="code_fokontany"
+                                                placeholder="Code fokontany"
+                                                defaultValue={
+                                                    row.code_fokontany
+                                                }
+                                                required
+                                            />
+                                            <Input
+                                                name="village"
+                                                placeholder="Village"
+                                                defaultValue={row.village}
+                                                required
+                                            />
+
+                                            {/* Homme */}
+                                            <Input
+                                                name="nom_homme"
+                                                placeholder="Nom homme"
+                                                defaultValue={row.nom_homme}
+                                                required
+                                            />
+                                            <Input
+                                                name="prenom_homme"
+                                                placeholder="Prénom homme"
+                                                defaultValue={row.prenom_homme}
+                                                required
+                                            />
+                                            <Input
+                                                type="number"
+                                                name="age_homme"
+                                                placeholder="Âge homme"
+                                                defaultValue={row.age_homme}
+                                            />
+                                            <Input
+                                                name="niveau_homme"
+                                                placeholder="Niveau homme"
+                                                defaultValue={row.niveau_homme}
+                                            />
+
+                                            {/* Femme */}
+                                            <Input
+                                                name="nom_femme"
+                                                placeholder="Nom femme"
+                                                defaultValue={row.nom_femme}
+                                                required
+                                            />
+                                            <Input
+                                                name="prenom_femme"
+                                                placeholder="Prénom femme"
+                                                defaultValue={row.prenom_femme}
+                                                required
+                                            />
+                                            <Input
+                                                type="number"
+                                                name="age_femme"
+                                                placeholder="Âge femme"
+                                                defaultValue={row.age_femme}
+                                            />
+                                            <Input
+                                                name="niveau_femme"
+                                                placeholder="Niveau femme"
+                                                defaultValue={row.niveau_femme}
+                                            />
+
+                                            {/* Dates */}
+                                            <Input
+                                                type="date"
+                                                name="date_mariage"
+                                                defaultValue={row.date_mariage}
+                                            />
+                                            <Input
+                                                type="date"
+                                                name="date_divorce"
+                                                defaultValue={row.date_divorce}
+                                                required
+                                            />
+
+                                            <Input
+                                                name="motif"
+                                                placeholder="Motif du divorce"
+                                                defaultValue={row.motif}
+                                            />
+                                            <Input
+                                                name="lieu_divorce"
+                                                placeholder="Lieu du divorce"
+                                                defaultValue={row.lieu_divorce}
+                                            />
+
+                                            <select
+                                                name="milieu"
+                                                className="border rounded px-2 py-1"
+                                                defaultValue={row.milieu}
+                                            >
+                                                <option value="">Milieu</option>
+                                                <option value="Urbain">
+                                                    Urbain
+                                                </option>
+                                                <option value="Rural">
+                                                    Rural
+                                                </option>
+                                            </select>
+
+                                            <select
+                                                name="declare"
+                                                className="border rounded px-2 py-1"
+                                                defaultValue={row.declare}
+                                            >
+                                                <option value="">
+                                                    Déclaré ?
+                                                </option>
+                                                <option value="Oui">Oui</option>
+                                                <option value="Non">Non</option>
+                                            </select>
+
+                                            <Input
+                                                type="date"
+                                                name="date_declaration"
+                                                defaultValue={
+                                                    row.date_declaration
+                                                }
+                                            />
+
+                                            <Button
+                                                type="submit"
+                                                className="col-span-2"
+                                            >
+                                                Modifier
+                                            </Button>
+                                        </form>
+                                    </DialogContent>
+                                </Dialog>
+
                                 <Button
                                     variant="ghost"
                                     size="icon"

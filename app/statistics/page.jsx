@@ -1,6 +1,9 @@
-import { yearlyStats, distributionStats } from "@/components/data/statistics";
-import { YearlyBarChart } from "@/components/charts/yearlyChart";
-import { DistributionPieChart } from "@/components/charts/distributionPieCharts";
+import {
+    yearlyStats,
+    distributionStats,
+} from "../../components/data/statistics";
+import { YearlyBarChart } from "../../components/charts/yearlyChart";
+import { DistributionPieChart } from "../../components/charts/distributionPieCharts";
 export default function StatisticsPage() {
     return (
         <div className="p-6 space-y-6 w-screen">

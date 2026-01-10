@@ -10,7 +10,7 @@ import {
     Legend,
 } from "recharts";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 
 export function YearlyBarChart({ data }) {
     return (
