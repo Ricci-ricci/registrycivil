@@ -25,10 +25,10 @@ export function YearlyBarChart({ data }) {
                         <YAxis />
                         <Tooltip />
                         <Legend />
-                        <Bar dataKey="naissance" />
-                        <Bar dataKey="mariage" />
-                        <Bar dataKey="divorce" />
-                        <Bar dataKey="deces" />
+                        <Bar dataKey="naissance" fill="#22c55e" />
+                        <Bar dataKey="mariage" fill="#3b82f6" />
+                        <Bar dataKey="divorce" fill="#f97316" />
+                        <Bar dataKey="deces" fill="#ef4444" />
                     </BarChart>
                 </ResponsiveContainer>
             </CardContent>
